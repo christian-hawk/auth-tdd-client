@@ -46,6 +46,7 @@ class TestLoginEndpoint(FlaskBaseTestCase):
         )
 
     def test_login_redirect_should_start_with_config_authorization_endpoint(self):
+        
         self.assertTrue(
             self.client.get(url_for('login')).location.startswith(
                 clientapp.cfg.CLIENT_AUTH_URI
@@ -69,15 +70,16 @@ class TestLoginEndpoint(FlaskBaseTestCase):
         )
     
     def test_login_endpoint_should_redirect_to_metadata_authorization_endpoint(self):
-
+        
         response = self.client.get(url_for('login'))
         
         self.assertTrue(
             response.location.startswith(
                 clientapp.oauth.op.server_metadata['authorization_endpoint']
             )
-
         )
+    
+    # TEST POST METHOD
     
     
    
