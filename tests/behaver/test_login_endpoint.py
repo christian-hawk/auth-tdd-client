@@ -4,6 +4,7 @@ from flask import Flask, url_for
 from typing import List
 import os
 
+
 def app_endpoints(app: Flask) -> List[str]:
     """ Return all enpoints in app """
     
