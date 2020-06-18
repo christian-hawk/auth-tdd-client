@@ -14,6 +14,7 @@ base_url = "https://chris.testingenv.org"
 class TestAuthcomlogin():
   def setup_method(self, method):
     self.driver = webdriver.Firefox()
+    self.driver.delete_all_cookies()
     self.vars = {}
   
   def teardown_method(self, method):
