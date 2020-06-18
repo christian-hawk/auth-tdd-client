@@ -25,9 +25,10 @@ class FlaskBaseTestCase(TestCase):
     def setUp(self):
         self.app = create_app()
         self.app.testing = True
-        self.app_context = self.app.test_request_context()
+        self.app_context = self.app.test_request_context(base_url="https://chris.testingenv.org")
         self.app_context.push()
         self.client = self.app.test_client()
+        
         #self.oauth = OAuth(self.app)
         os.environ['AUTHLIB_INSECURE_TRANSPORT'] = "1"
         '''
@@ -107,30 +108,31 @@ class TestProtectedContentEndpoint(FlaskBaseTestCase):
     def test_protected_content_return_status_200_ir_session_profile_exists(self):
         
         with self.client.session_transaction() as sess:
-            sess['profile'] = 'foo'
+            sess['user'] = 'foo'
 
         self.assertEqual(
-            self.client.get(url_for('protected_content')).status_code,
+            self.client.get(url_for('protected_content',_external=True)).status_code,
             200
         )
 
     def test_should_return_302_if_no_session_profile(self):
         self.assertEqual(
-            self.client.get(url_for('protected_content')).status_code,
+            self.client.get(url_for('protected_content',_external=True)).status_code,
             302
         )
         
     
     def test_protected_content_should_redirect_to_login_if_session_profile_doesnt_exist(self):
 
-        response = self.client.get(url_for('protected_content'))
-
-        self.assertTrue(
-            response.location.startswith(
-                oauth.op.server_metadata['authorization_endpoint']
+        response = self.client.get(url_for('protected_content',_external=True))
+        self.assertEqual(
+                response.location,
+                url_for('login',_external=True),
+                'Protected page is not redirecting to login page'
             )
 
-        )
+
+        
 
 
 

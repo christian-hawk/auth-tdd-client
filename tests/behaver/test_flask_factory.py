@@ -84,3 +84,16 @@ class TestFlaskApp(TestCase):
             clientapp.create_app().config['OP_CLIENT_SECRET'],
             clientapp.cfg.CLIENT_SECRET
         )
+
+    def test_if_has_attr_ssl_verify(self):
+        self.assertTrue(
+            hasattr(clientapp,'ssl_verify'),
+            'There is no ssl_verify in clientapp'
+        )
+
+
+    def test_should_have_method_to_set_CA_CURL_CERT(self):
+        self.assertTrue(
+            clientapp.ssl_verify.__call__
+        )
+    
