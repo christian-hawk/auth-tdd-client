@@ -12,6 +12,12 @@ jobs:
       - python/install-deps
       - python/save-cache
       - run:
+          command: |
+          		echo "142.93.243.73   chris.testingenv.org" >> /etc/hosts
+            	echo "34.71.102.255   chris.gluutwo.org" >> /etc/hosts
+            	echo "34.68.161.173	chris.gluuthree.org" >> /etc/hosts
+         
+      - run:
           command: pytest tests/behaver
           name: Test
 
