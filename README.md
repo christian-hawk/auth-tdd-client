@@ -1,3 +1,4 @@
+[![Quality Gate Status](http://chris.testingenv.org/api/project_badges/measure?project=auth-tdd-client&metric=alert_status)](http://chris.testingenv.org/dashboard?id=auth-tdd-client)
 # Test-Auth-Client
 
 O app vai disponibilizar conteudo para usuarios logados pelo gluu que iniciaram o login pelo idp
