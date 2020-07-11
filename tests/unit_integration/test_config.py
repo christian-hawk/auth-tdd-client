@@ -1,11 +1,10 @@
 import clientapp.config as cfg
 from unittest import TestCase
-import os
 
 class TestConfig(TestCase):
     def test_has_attribute_SSL_VERIFY(self):
         self.assertTrue(
-            hasattr(cfg,'SSL_VERIFY'),
+            hasattr(cfg, 'SSL_VERIFY'),
             'SSL_VERIFY attribute is missing in config.'
         )
 
