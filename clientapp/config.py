@@ -1,5 +1,5 @@
-CLIENT_ID = "f533946c-3e1c-4e9e-90db-c662e89a7ad3"
-CLIENT_SECRET = "0c5da951-22bf-47dc-8db7-000e829d5f3f"
+CLIENT_ID = "c5993da4-0627-43f4-9fd3-6d9ef9cf63f8"
+CLIENT_SECRET = "e72a4406-6f54-404c-85f9-3c72c90f870d"
 CLIENT_AUTH_URI = "https://chris.gluuthree.org/oxauth/restv1/authorize"
 TOKEN_URI = "https://chris.gluuthree.org/oxauth/restv1/token"
 USERINFO_URI = "https://chris.gluuthree.org/oxauth/restv1/userinfo"
@@ -19,10 +19,8 @@ SERVER_TOKEN_AUTH_METHOD = "client_secret_post"
 
 # for gluu
 ACR_VALUES = ''
-SAML_ACR_VALUES = "inbound_saml"
-SOCIAL_ACR_VALUES = "passport_social"
 PRE_SELECTED_PROVIDER = False
-PRE_SELECTED_PROVIDER_ID = 'saml-emaillink'
+PRE_SELECTED_PROVIDER_ID = ''
 
 # SYSTEM SETTINGS
 # use with caution, unsecure requests, for develpment environments
