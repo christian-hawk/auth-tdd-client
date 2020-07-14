@@ -1,18 +1,27 @@
-CLIENT_ID = "be201b4d-dfe9-4877-8a95-5d3d64589a27"
-CLIENT_SECRET = "Test123$"
-CLIENT_AUTH_URI = "https://chris.gluutwo.org/oxauth/restv1/authorize"
-TOKEN_URI = "https://chris.gluutwo.org/oxauth/restv1/token"
-USERINFO_URI = "https://chris.gluutwo.org/oxauth/restv1/userinfo"
+CLIENT_ID = "c5993da4-0627-43f4-9fd3-6d9ef9cf63f8"
+CLIENT_SECRET = "e72a4406-6f54-404c-85f9-3c72c90f870d"
+CLIENT_AUTH_URI = "https://chris.gluuthree.org/oxauth/restv1/authorize"
+TOKEN_URI = "https://chris.gluuthree.org/oxauth/restv1/token"
+USERINFO_URI = "https://chris.gluuthree.org/oxauth/restv1/userinfo"
 REDIRECT_URIS = [
-    'https://chris.testingenv.org/callback'
+    'https://chris.testingenv.org/oidc_callback'
 ]
-ISSUER = "https://chris.gluutwo.org"
+ISSUER = "https://chris.gluuthree.org"
+
+SERVER_META_URL = "https://chris.gluuthree.org/.well-known/openid-configuration"
+
+# Token authentication method can be
+# client_secret_basic
+# client_secret_post
+# none
+
+SERVER_TOKEN_AUTH_METHOD = "client_secret_post"
 
 # for gluu
-SAML_ACR_VALUES = "inbound-saml"
-SOCIAL_ACR_VALUES = "social-saml"
+ACR_VALUES = ''
+PRE_SELECTED_PROVIDER = False
+PRE_SELECTED_PROVIDER_ID = ''
 
 # SYSTEM SETTINGS
 # use with caution, unsecure requests, for develpment environments
 SSL_VERIFY = False
-

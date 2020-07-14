@@ -1,9 +1,9 @@
 import clientapp
 
-#import logging
-
-#log = logging.getLogger(__name__)
-#log.info('TESTINGl')
+# import logging
+ 
+# log = logging.getLogger(__name__)
+# log.info('TESTINGl')
 
 if __name__ == '__main__':
     app = clientapp.create_app()

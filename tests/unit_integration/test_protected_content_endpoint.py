@@ -1,19 +1,15 @@
 from unittest import TestCase
-from clientapp import create_app, session, oauth
-from flask import Flask, url_for, redirect
+from clientapp import create_app, session
+from flask import Flask, url_for
 from typing import List
-from flask_oidc import OpenIDConnect
-import os.path
-import json
 from werkzeug import local
-from authlib.integrations.flask_client import OAuth
 import os
 
 
 
 def app_endpoint(app: Flask) -> List[str]:
     """ Return all enpoints in app """
-    
+
     endpoints = []
     for item in app.url_map.iter_rules():
         endpoint = item.endpoint.replace("_","-")
@@ -28,7 +24,7 @@ class FlaskBaseTestCase(TestCase):
         self.app_context = self.app.test_request_context(base_url="https://chris.testingenv.org")
         self.app_context.push()
         self.client = self.app.test_client()
-        
+
         #self.oauth = OAuth(self.app)
         os.environ['AUTHLIB_INSECURE_TRANSPORT'] = "1"
         '''
@@ -36,10 +32,10 @@ class FlaskBaseTestCase(TestCase):
             server_metadata_url = 'https://chris.gluuthree.org/.well-known/openid-configuration',
             client_kwargs = {'scope' : 'openid'})
         '''
-        
-    
-        
-        
+
+
+
+
 
 class TestProtectedContentEndpoint(FlaskBaseTestCase):
 
@@ -50,11 +46,11 @@ class TestProtectedContentEndpoint(FlaskBaseTestCase):
             endpoints,
             'protected-content route not found in app endpoints'
         )
-        
+
     def test_app_protected_content_route_should_return_valid_requisition(self):
-        
+
         response = self.client.get(
-            url_for('protected_content')        
+            url_for('protected_content')
             )
 
         self.assertIn(
@@ -62,17 +58,17 @@ class TestProtectedContentEndpoint(FlaskBaseTestCase):
             range(100,511),
             'protected content route returned invalid requisition'
         )
-        
-    
+
+
     '''
     def test_should_return_if_client_configuration_json_exists(self):
-        
+
         self.assertTrue(
             os.path.exists('clientapp/client_secrets.json'),
             'File clientapp/client_secrets.json does not exists'
         )
-    
-    
+
+
     def test_should_return_if_client_secrets_json_has_all_keys(self):
         with open('client_secrets.json') as json_file:
             desired_keys = [
@@ -83,8 +79,8 @@ class TestProtectedContentEndpoint(FlaskBaseTestCase):
                 'userinfo_uri',
                 'redirect_uris',
                 'issuer',
-            ]                                                                                                                                      
-                        
+            ]
+
             data = json.load(json_file)
 
             self.assertTrue(
@@ -95,68 +91,68 @@ class TestProtectedContentEndpoint(FlaskBaseTestCase):
     def test_should_return_if_session_exists_in_clientapp(self):
         import clientapp
         self.assertTrue(
-            
+
             hasattr(clientapp,'session'),
             "session is not an attribute of clientapp"
         )
         del clientapp
-    
-    def test_should_check_if_session_is_LocalProxy_instance(self):
-        self.assertIsInstance(session,local.LocalProxy) 
 
-    
+    def test_should_check_if_session_is_LocalProxy_instance(self):
+        self.assertIsInstance(session,local.LocalProxy)
+
+
     def test_protected_content_return_status_200_ir_session_profile_exists(self):
-        
+
         with self.client.session_transaction() as sess:
             sess['user'] = 'foo'
 
         self.assertEqual(
-            self.client.get(url_for('protected_content',_external=True)).status_code,
+            self.client.get(url_for('protected_content')).status_code,
             200
         )
 
     def test_should_return_302_if_no_session_profile(self):
         self.assertEqual(
-            self.client.get(url_for('protected_content',_external=True)).status_code,
+            self.client.get(url_for('protected_content')).status_code,
             302
         )
-        
-    
+
+
     def test_protected_content_should_redirect_to_login_if_session_profile_doesnt_exist(self):
 
-        response = self.client.get(url_for('protected_content',_external=True))
-        self.assertEqual(
-                response.location,
-                url_for('login',_external=True),
+        response = self.client.get(url_for('protected_content'))
+        self.assertTrue(
+                response.location.endswith(url_for('login')),
                 'Protected page is not redirecting to login page'
             )
 
 
-        
 
 
 
-        
-        
-       
-            
-        
 
 
-    ''' TODO 
+
+
+
+
+
+
+
+    ''' TODO
     def test_should_return_if_user_logged_in_exists(self):
         self.assertTrue(
             hasattr(app,'user_logged_in')
         )
     '''
 
-    
-    
-    
-    
-    
-    
-        
+
+
+
+
+
+
+
 
 
 
