@@ -8,15 +8,12 @@ import base64
 from .ressources.errors import MismatchingStateError, OAuthError
 import os
 
-
 oauth = OAuth()
 
 logging.basicConfig(
     level=logging.DEBUG,
     format='[%(asctime)s] %(levelname)s %(name)s in %(module)s : %(message)s',
-    filename='test-client.log'
-    )
-
+    filename='test-client.log')
 '''
 dictConfig({
     'version': 1,
@@ -48,6 +45,7 @@ dictConfig({
 })
 '''
 
+
 def get_preselected_provider():
     provider_id_string = cfg.PRE_SELECTED_PROVIDER_ID
     provider_object = '{ "provider" : "%s" }' % provider_id_string
@@ -56,6 +54,7 @@ def get_preselected_provider():
     base64url_value = base64url_bytes.decode()
 
     return base64url_value
+
 
 def ssl_verify(ssl_verify=cfg.SSL_VERIFY):
     if ssl_verify is False:
@@ -77,13 +76,13 @@ def create_app():
     app.config['OP_CLIENT_ID'] = cfg.CLIENT_ID
     app.config['OP_CLIENT_SECRET'] = cfg.CLIENT_SECRET
     oauth.init_app(app)
-    oauth.register(
-        'op',
-        server_metadata_url=cfg.SERVER_META_URL,
-        client_kwargs={
-                'scope': 'openid profile email',
-                'acr_value': 'passport-saml'
-                }, token_endpoint_auth_method='client_secret_post')
+    oauth.register('op',
+                   server_metadata_url=cfg.SERVER_META_URL,
+                   client_kwargs={
+                       'scope': 'openid profile email',
+                       'acr_value': 'passport-saml'
+                   },
+                   token_endpoint_auth_method='client_secret_post')
 
     # token_endpoint_auth_method = 'client_secret_post')
     # client_auth_methods = ['client_secret_post'])
@@ -107,7 +106,7 @@ def create_app():
         app.logger.debug('/protected-content - cookies = %s' % request.cookies)
         app.logger.debug('/protected-content - session = %s' % session)
         if 'user' in session:
-           return {'status': 'success'},200
+            return {'status': 'success'}, 200
 
         return redirect(url_for('login'))
 
@@ -118,20 +117,19 @@ def create_app():
         app.logger.debug('/login redirect_uri = %s' % redirect_uri)
         response = oauth.op.authorize_redirect()
         query_args = {
-            'redirect_uri' : redirect_uri,
-         }
+            'redirect_uri': redirect_uri,
+        }
         if cfg.PRE_SELECTED_PROVIDER is True:
-            query_args['preselectedExternalProvider'] = get_preselected_provider()
+            query_args[
+                'preselectedExternalProvider'] = get_preselected_provider()
 
         if cfg.ACR_VALUES is not None:
             query_args['acr_values'] = cfg.ACR_VALUES
 
         response = oauth.op.authorize_redirect(**query_args)
 
-        app.logger.debug(
-            '/login authorize_redirect(redirect_uri) url = %s' % (
-                response.location)
-            )
+        app.logger.debug('/login authorize_redirect(redirect_uri) url = %s' %
+                         (response.location))
 
         return response
 
@@ -141,10 +139,8 @@ def create_app():
         try:
             if not request.args['code']:
                 return 400
-            app.logger.info('/callback - received %s - %s' % (
-                request.method,
-                request.query_string
-                ))
+            app.logger.info('/callback - received %s - %s' %
+                            (request.method, request.query_string))
             token = oauth.op.authorize_access_token()
             app.logger.debug('/callback - token = %s' % token)
             user = oauth.op.parse_id_token(token)
@@ -170,11 +166,9 @@ def create_app():
             if 'provider_id' in content:
                 cfg.PRE_SELECTED_PROVIDER_ID = content['provider_id']
                 cfg.PRE_SELECTED_PROVIDER = True
-                return jsonify({ "provider_id" : content['provider_id'] }),200
+                return jsonify({"provider_id": content['provider_id']}), 200
 
         else:
-            return {},400
+            return {}, 400
 
     return app
-
-
