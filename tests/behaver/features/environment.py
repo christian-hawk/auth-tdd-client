@@ -2,7 +2,6 @@ from selenium import webdriver
 import os
 from pyvirtualdisplay import Display
 
-
 display = Display(visible=0, size=(1024, 768))
 
 
@@ -15,7 +14,7 @@ def before_scenario(context, scenario):
     options = webdriver.FirefoxOptions()
     options.headless = True
     context.web = webdriver.Firefox()
-    
+
     # context.web = webdriver.Firefox()
 
 

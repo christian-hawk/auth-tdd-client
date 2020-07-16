@@ -2,6 +2,6 @@ from authlib.integrations.base_client.errors import MismatchingStateError, OAuth
 
 import logging
 
+
 class CSRFWarning(Exception):
     print(Exception)
-    
