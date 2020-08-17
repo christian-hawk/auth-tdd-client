@@ -96,6 +96,7 @@ class TestLoginEndpoint(FlaskBaseTestCase):
         self.assertIn(
             'acr_values', response.location
         )
+
     def test_if_config_has_no_acr_values_querty_str_not_contain(self):
         clientapp.cfg.ACR_VALUES = ''
         response = self.client.get(url_for('login'))
