@@ -8,6 +8,7 @@ from flask_oidc import registration, discovery
 import json
 import sys
 from httplib2 import RelativeURIError
+from .client_handler import ClientHandler
 
 
 from .ressources.errors import MismatchingStateError, OAuthError
@@ -160,6 +161,12 @@ def create_app():
             </body>
         </html>
         '''
+
+    @app.route('/register', methods=['POST'])
+    def register():
+        client_handler = ClientHandler('https://t1.techno24x7.com','https://test.com')
+        content = request.json
+        return {},100
 
     @app.route('/protected-content', methods=['GET'])
     def protected_content():
