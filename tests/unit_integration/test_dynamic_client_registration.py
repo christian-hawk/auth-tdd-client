@@ -1,13 +1,17 @@
 from unittest import TestCase
+from unittest.mock import MagicMock, patch
 import clientapp
 import sys
 import inspect
 import clientapp.client_handler as client_handler
+from typing import Optional
+import helper
+
 
 ClientHandler = client_handler.ClientHandler
 
 #helper
-def get_class_instance(op_url='https://t1.techno24x7.com', client_url='teste'):
+def get_class_instance(op_url='https://t1.techno24x7.com', client_url='https://mock.test.com'):
     client_handler_obj = ClientHandler(op_url, client_url)
     return client_handler_obj
 
@@ -94,7 +98,7 @@ class dynamic_client_registration(TestCase):
 
         insp = inspect.getfullargspec(ClientHandler.register_client)
         self.assertTrue(
-            insp.annotations['op_data'] == dict and insp.annotations['client_url'] == str,
+            insp.annotations['op_data'] == Optional[dict] and insp.annotations['client_url'] == Optional[str],
             'register_client is not receiving the right params'
         )
 
@@ -137,7 +141,7 @@ class dynamic_client_registration(TestCase):
     def test_if_discover_params_are_expected_type(self):
         insp = inspect.getfullargspec(ClientHandler.discover)
         self.assertTrue(
-            insp.annotations['op_url'] == str and insp.annotations['disc'] == client_handler.discovery,
+            insp.annotations['op_url'] == Optional[str] and insp.annotations['disc'] == client_handler.discovery,
             'discover is not receiving the right params'
         )
 
@@ -211,8 +215,8 @@ class dynamic_client_registration(TestCase):
 
     def test_class_init_should_set_op_url(self):
         op_url = 'https://t1.techno24x7.com'
-        client_url = 'test'
-        client_handler_obj = ClientHandler(op_url,client_url)
+
+        client_handler_obj = get_class_instance(op_url)
 
         self.assertEqual(
             client_handler_obj.__dict__['_ClientHandler__op_url'],
@@ -221,7 +225,7 @@ class dynamic_client_registration(TestCase):
 
     def test_class_init_should_set_client_url(self):
         op_url = 'https://t1.techno24x7.com'
-        client_url = 'test'
+        client_url = 'https://mock.test.com'
         client_handler_obj = ClientHandler(op_url,client_url)
 
         self.assertEqual(
@@ -230,11 +234,13 @@ class dynamic_client_registration(TestCase):
         )
 
     def test_class_init_should_set_metadata_url(self):
+
         op_url = 'https://t1.techno24x7.com'
-        client_url = 'test'
+        client_handler_obj = get_class_instance(op_url)
+
         expected_metadata_url = op_url + '/.well-known/openid-configuration'
 
-        client_handler_obj = ClientHandler(op_url,client_url)
+        #client_handler_obj = ClientHandler(op_url,client_url)
 
 
         self.assertEqual(
@@ -254,11 +260,7 @@ class dynamic_client_registration(TestCase):
             'client_secret',
         ]
 
-        op_url = 'https://t1.techno24x7.com'
-        client_url = 'test'
-
-
-        client_handler_obj = ClientHandler(op_url,client_url)
+        client_handler_obj = get_class_instance()
         client_dict = client_handler_obj.get_client_dict()
 
         self.assertTrue(
@@ -270,8 +272,8 @@ class dynamic_client_registration(TestCase):
     def test_get_client_dict_values_cannot_be_none(self):
 
         op_url = 'https://t1.techno24x7.com'
-        client_url = 'test'
-        client_handler_obj = ClientHandler(op_url,client_url)
+
+        client_handler_obj = get_class_instance(op_url)
 
         client_dict = client_handler_obj.get_client_dict()
 
@@ -290,11 +292,22 @@ class dynamic_client_registration(TestCase):
 
     def test_get_client_dict_should_return_client_id_value(self):
         client_handler_obj = get_class_instance()
+        # import ipdb; ipdb.set_trace()
         self.assertEqual(
             client_handler_obj.get_client_dict()['client_id'],
             client_handler_obj._ClientHandler__client_id
         )
 
+    def test_init_should_call_discover_once(self):
+        ClientHandler.discover = MagicMock(name='discover')
+        ClientHandler.discover.return_value = helper.OP_DATA_DICT_RESPONSE
+        client_handler_obj = get_class_instance()
+
+
+    def test_init_should_call_register_client_once(self):
+        ClientHandler.register_client = MagicMock(name='register_client')
+        client_handler_obj = get_class_instance()
+        ClientHandler.register_client.assert_called_once()
 
 
 
