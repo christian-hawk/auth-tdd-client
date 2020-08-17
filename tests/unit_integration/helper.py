@@ -1,3 +1,16 @@
+from flask import Flask
+from typing import List
+
+# Helper functions
+def app_endpoints(app: Flask) -> List[str]:
+    """ Return all enpoints in app """
+    endpoints = []
+    for item in app.url_map.iter_rules():
+        endpoint = item.endpoint.replace("_","-")
+        endpoints.append(endpoint)
+    return endpoints
+
+
 # Mocks
 OP_DATA_DICT_RESPONSE = {
   'request_parameter_supported': True,
