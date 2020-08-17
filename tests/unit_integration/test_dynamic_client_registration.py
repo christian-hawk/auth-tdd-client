@@ -16,9 +16,8 @@ def get_class_instance(op_url='https://t1.techno24x7.com', client_url='https://m
     return client_handler_obj
 
 
-class dynamic_client_registration(TestCase):
+class DynamicClientRegistration(TestCase):
 
-    # testing module
 
     def test_if_registration_is_imported_in_sys(self):
         self.assertIn(
@@ -227,7 +226,6 @@ class dynamic_client_registration(TestCase):
         op_url = 'https://t1.techno24x7.com'
         client_url = 'https://mock.test.com'
         client_handler_obj = ClientHandler(op_url,client_url)
-
         self.assertEqual(
             client_handler_obj.__dict__['_ClientHandler__client_url'],
             client_url
@@ -302,6 +300,8 @@ class dynamic_client_registration(TestCase):
         ClientHandler.discover = MagicMock(name='discover')
         ClientHandler.discover.return_value = helper.OP_DATA_DICT_RESPONSE
         client_handler_obj = get_class_instance()
+        ClientHandler.discover.assert_called_once()
+
 
 
     def test_init_should_call_register_client_once(self):
@@ -311,17 +311,9 @@ class dynamic_client_registration(TestCase):
 
 
 
-        # for key, value in client_dict:
 
 
 
 
 
-
-    # def test_if_get_client_dict_params_are_expected_type(self):
-    #     insp = inspect.getfullargspec(ClientHandler.get_client_dict)
-    #     self.assertTrue(
-    #         insp.annotations['op_url'] == str and insp.annotations['disc'] == client_handler.get_client_dicty,
-    #         'get_client_dict is not receiving the right params'
-    #     )
 
