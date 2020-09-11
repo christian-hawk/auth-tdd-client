@@ -1,6 +1,5 @@
 from unittest import TestCase
-from unittest.mock import MagicMock, patch
-import clientapp
+from unittest.mock import MagicMock
 import sys
 import inspect
 import clientapp.client_handler as client_handler

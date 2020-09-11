@@ -2,7 +2,6 @@ from unittest import TestCase
 import clientapp
 from flask import Flask
 import os
-from unittest.mock import MagicMock
 
 
 class TestFlaskApp(TestCase):

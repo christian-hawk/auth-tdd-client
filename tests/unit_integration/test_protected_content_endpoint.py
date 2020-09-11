@@ -1,5 +1,5 @@
 from unittest import TestCase
-from clientapp import create_app, session, oauth
+from clientapp import create_app, session
 from flask import Flask, url_for
 from typing import List
 from werkzeug import local

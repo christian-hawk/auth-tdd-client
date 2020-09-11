@@ -3,7 +3,7 @@ import clientapp
 from flask import Flask, url_for
 from typing import List
 import os
-from unittest.mock import MagicMock, patch, sentinel
+from unittest.mock import MagicMock
 
 
 def app_endpoints(app: Flask) -> List[str]:

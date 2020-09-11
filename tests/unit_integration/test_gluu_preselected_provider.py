@@ -1,9 +1,8 @@
 from unittest import TestCase
 import clientapp
 import os
-from flask import Flask, url_for
+from flask import url_for
 from typing import List
-from unittest.mock import MagicMock, patch, sentinel
 
 
 class FlaskBaseTestCase(TestCase):

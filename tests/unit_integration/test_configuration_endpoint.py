@@ -1,6 +1,6 @@
 from unittest import TestCase
 import clientapp
-from flask import Flask, url_for, jsonify
+from flask import Flask, url_for
 from typing import List
 import os
 import json
