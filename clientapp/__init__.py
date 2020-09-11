@@ -113,8 +113,7 @@ def get_preselected_provider():
         base64url_value_unpad = base64url_value.replace('=','')
         print('get_preselected_provider - base64url encoded unpad: %s' % base64url_value_unpad)
         return base64url_value_unpad
-    else:
-        return base64url_value
+    return base64url_value
 
 
 def ssl_verify(ssl_verify=cfg.SSL_VERIFY):
