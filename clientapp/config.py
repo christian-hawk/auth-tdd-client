@@ -3,9 +3,7 @@ CLIENT_SECRET = "92f7c172-6d51-4159-98a5-58d9ead7c9e1"
 CLIENT_AUTH_URI = "https://t1.techno24x7.com/oxauth/restv1/authorize"
 TOKEN_URI = "https://t1.techno24x7.com/oxauth/restv1/token"
 USERINFO_URI = "https://t1.techno24x7.com/oxauth/restv1/userinfo"
-REDIRECT_URIS = [
-    'https://chris.testingenv.org/oidc_callback'
-]
+REDIRECT_URIS = ['https://chris.testingenv.org/oidc_callback']
 ISSUER = "https://t1.techno24x7.com"
 
 SERVER_META_URL = "https://t1.techno24x7.com/.well-known/openid-configuration"
