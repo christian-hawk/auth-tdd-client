@@ -1,5 +1,5 @@
 from unittest import TestCase
-from clientapp import create_app, session
+from clientapp import create_app, session, oauth
 from flask import Flask, url_for
 from typing import List
 from werkzeug import local
@@ -25,6 +25,7 @@ class FlaskBaseTestCase(TestCase):
         self.app_context.push()
         self.client = self.app.test_client()
 
+
         #self.oauth = OAuth(self.app)
         os.environ['AUTHLIB_INSECURE_TRANSPORT'] = "1"
         '''
@@ -36,6 +37,7 @@ class FlaskBaseTestCase(TestCase):
 
 class TestProtectedContentEndpoint(FlaskBaseTestCase):
     def test_app_should_contain_protected_content_route(self):
+
         endpoints = app_endpoint(create_app())
         self.assertIn('protected-content', endpoints,
                       'protected-content route not found in app endpoints')
@@ -46,37 +48,9 @@ class TestProtectedContentEndpoint(FlaskBaseTestCase):
 
         self.assertIn(
             self.client.get(url_for('protected_content')).status_code,
-            range(100, 511),
-            'protected content route returned invalid requisition')
-
-    '''
-    def test_should_return_if_client_configuration_json_exists(self):
-
-        self.assertTrue(
-            os.path.exists('clientapp/client_secrets.json'),
-            'File clientapp/client_secrets.json does not exists'
+            range(100,511),
+            'protected content route returned invalid requisition'
         )
-
-
-    def test_should_return_if_client_secrets_json_has_all_keys(self):
-        with open('client_secrets.json') as json_file:
-            desired_keys = [
-                'client_id',
-                'client_secret',
-                'auth_uri',
-                'token_uri',
-                'userinfo_uri',
-                'redirect_uris',
-                'issuer',
-            ]
-
-            data = json.load(json_file)
-
-            self.assertTrue(
-                set(data['web'].keys()) == set(desired_keys),
-                'json file does not have all desired keys'
-            )
-    '''
 
     def test_should_return_if_session_exists_in_clientapp(self):
         import clientapp

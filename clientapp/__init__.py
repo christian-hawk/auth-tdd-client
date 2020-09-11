@@ -4,6 +4,12 @@ from . import config as cfg
 from logging.config import dictConfig
 import logging
 import base64
+from flask_oidc import registration, discovery
+import json
+import sys
+from httplib2 import RelativeURIError
+from .client_handler import ClientHandler
+
 
 from .ressources.errors import MismatchingStateError, OAuthError
 import os
@@ -44,16 +50,71 @@ dictConfig({
 
 })
 '''
+# recebe a url do op
+# descobre os dados do op com a url
+# registra o cliente (app) no op com os dados do discovery
+# atualiza client-id, client-secret e metadata-server
+
+
+# def register_client(op_data: dict, client_url: str) -> dict:
+#     """[register client and returns client information]
+
+#     :param op_data: [description]
+#     :type op_data: dict
+#     :param client_url: [description]
+#     :type client_url: str
+#     :return: [client information including client-id and secret]
+#     :rtype: dict
+#     """
+#     redirect_uri = '%s/oidc_callback' % client_url
+#     reg_info = registration.register_client(op_data, [redirect_uri])
+#     return reg_info
+
+# def discover(op_url: str, disc:discovery=discovery) -> dict :
+#     """Discover op information on .well-known/open-id-configuration
+#     :param op_url: [url from OP]
+#     :type op_url: str
+#     :param discovery: [flask_oidc.discovery injection], defaults to discovery
+#     :type discovery: discovery, optional
+#     :return: [data retrieved from OP url]
+#     :rtype: dict
+#     """
+#     op_data = {}
+#     try:
+#         op_data = disc.discover_OP_information(op_url)
+#         print(op_data)
+#         return op_data
+
+#     except json.JSONDecodeError as err:
+#         print('Error trying to decode JSON: %s' % err)
+
+#     except RelativeURIError as err:
+#         print(err)
+
+#     except Exception as e:
+#         print('An unexpected ocurred: %s' % e)
+
+#     return op_data
+
+
+
+
 
 
 def get_preselected_provider():
     provider_id_string = cfg.PRE_SELECTED_PROVIDER_ID
+    print('get_preselected_provider - provider_id_string = %s' % provider_id_string)
     provider_object = '{ "provider" : "%s" }' % provider_id_string
     provider_object_bytes = provider_object.encode()
     base64url_bytes = base64.urlsafe_b64encode(provider_object_bytes)
     base64url_value = base64url_bytes.decode()
-
-    return base64url_value
+    print('get_preselected_provider - base64url encoded: %s' % base64url_value)
+    if base64url_value.endswith('='):
+        base64url_value_unpad = base64url_value.replace('=','')
+        print('get_preselected_provider - base64url encoded unpad: %s' % base64url_value_unpad)
+        return base64url_value_unpad
+    else:
+        return base64url_value
 
 
 def ssl_verify(ssl_verify=cfg.SSL_VERIFY):
@@ -76,13 +137,13 @@ def create_app():
     app.config['OP_CLIENT_ID'] = cfg.CLIENT_ID
     app.config['OP_CLIENT_SECRET'] = cfg.CLIENT_SECRET
     oauth.init_app(app)
-    oauth.register('op',
-                   server_metadata_url=cfg.SERVER_META_URL,
-                   client_kwargs={
-                       'scope': 'openid profile email',
-                       'acr_value': 'passport-saml'
-                   },
-                   token_endpoint_auth_method='client_secret_post')
+    oauth.register(
+        'op',
+        server_metadata_url=cfg.SERVER_META_URL,
+        client_kwargs={
+                'scope': 'openid profile mail user_name',
+                'acr_value': cfg.ACR_VALUES
+                }, token_endpoint_auth_method='client_secret_post')
 
     # token_endpoint_auth_method = 'client_secret_post')
     # client_auth_methods = ['client_secret_post'])
@@ -100,6 +161,12 @@ def create_app():
             </body>
         </html>
         '''
+
+    @app.route('/register', methods=['POST'])
+    def register():
+        client_handler = ClientHandler('https://t1.techno24x7.com','https://test.com')
+        content = request.json
+        return {},100
 
     @app.route('/protected-content', methods=['GET'])
     def protected_content():
@@ -160,13 +227,17 @@ def create_app():
 
     @app.route("/configuration", methods=["POST"])
     def configuration():
+        '''Receives client configuration via API'''
+        app.logger.info('/configuration called')
         content = request.json
         app.logger.debug("content = %s" % content)
         if content is not None:
             if 'provider_id' in content:
                 cfg.PRE_SELECTED_PROVIDER_ID = content['provider_id']
                 cfg.PRE_SELECTED_PROVIDER = True
-                return jsonify({"provider_id": content['provider_id']}), 200
+                app.logger.debug('/configuration: provider_id = %s' % content['provider_id'])
+                return jsonify({ "provider_id" : content['provider_id'] }),200
+
 
         else:
             return {}, 400

@@ -1,7 +1,7 @@
-[![Quality Gate Status](http://chris.testingenv.org/api/project_badges/measure?project=auth-tdd-client&metric=alert_status)](http://chris.testingenv.org/dashboard?id=auth-tdd-client)
+
 # Test-Auth-Client
 
-O app vai disponibilizar conteudo para usuarios logados pelo gluu que iniciaram o login pelo idp
+This client aims to be a reliable sclient build with BDD / TDD metologies to be used in auth testing.
 
 Flask based auth/identity app based on test-first, made to encourage and learn BDD and TDD.
 
@@ -40,11 +40,4 @@ App->App: Return protected-content\nOr unauthorized error
 - Coverage: minimum accepted: 80%
 
 
-### Versioning
 
-Using GIT FLOW development model. Which means that we have a develop and master branch. All development is done under feature branches, which are (when finished) merged into the development branch
-
-Feature branches? `feature/`
-Release branches? `release/`
-Hotfix branches? `hotfix/`
-Support branches? `support/`
