@@ -68,9 +68,8 @@ class TestPreselectedProvider(FlaskBaseTestCase):
             'client app does not have get_preselected_provider attr')
 
     def test_get_preselected_provider_should_be_callable(self):
-        self.assertTrue(
-            hasattr(clientapp.get_preselected_provider, '__call__'),
-            'get_preselected_provider is not callable')
+        self.assertTrue(callable(clientapp.get_preselected_provider),
+                        'get_preselected_provider is not callable')
 
     def test_get_selected_provider_should_return_base64(self):
 
