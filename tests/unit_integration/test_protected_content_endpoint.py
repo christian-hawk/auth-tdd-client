@@ -1,5 +1,5 @@
 from unittest import TestCase
-from clientapp import create_app, session, oauth
+from clientapp import create_app, session
 from flask import Flask, url_for
 from typing import List
 from werkzeug import local
@@ -25,7 +25,6 @@ class FlaskBaseTestCase(TestCase):
         self.app_context.push()
         self.client = self.app.test_client()
 
-
         #self.oauth = OAuth(self.app)
         os.environ['AUTHLIB_INSECURE_TRANSPORT'] = "1"
         '''
@@ -48,9 +47,8 @@ class TestProtectedContentEndpoint(FlaskBaseTestCase):
 
         self.assertIn(
             self.client.get(url_for('protected_content')).status_code,
-            range(100,511),
-            'protected content route returned invalid requisition'
-        )
+            range(100, 511),
+            'protected content route returned invalid requisition')
 
     def test_should_return_if_session_exists_in_clientapp(self):
         import clientapp

@@ -3,7 +3,7 @@ import clientapp
 from flask import Flask, url_for
 from typing import List
 import os
-from unittest.mock import MagicMock, patch, sentinel
+from unittest.mock import MagicMock
 
 
 def app_endpoints(app: Flask) -> List[str]:
@@ -77,9 +77,7 @@ class TestLoginEndpoint(FlaskBaseTestCase):
     def test_if_config_has_acr_parameter_query_str_contain_acr_value(self):
         clientapp.cfg.ACR_VALUES = 'inbound_saml'
         response = self.client.get(url_for('login'))
-        self.assertIn(
-            'acr_values', response.location
-        )
+        self.assertIn('acr_values', response.location)
 
     def test_if_config_has_no_acr_values_querty_str_not_contain(self):
         clientapp.cfg.ACR_VALUES = ''
