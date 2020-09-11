@@ -69,7 +69,7 @@ class TestPreselectedProvider(FlaskBaseTestCase):
 
     def test_get_preselected_provider_should_be_callable(self):
         self.assertTrue(
-            hasattr(clientapp.get_preselected_provider, '__call__'),
+            callable(clientapp.get_preselected_provider),
             'get_preselected_provider is not callable')
 
     def test_get_selected_provider_should_return_base64(self):
