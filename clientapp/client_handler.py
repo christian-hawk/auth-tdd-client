@@ -26,7 +26,6 @@ class ClientHandler:
         self.__metadata_url = '%s/.well-known/openid-configuration' % op_url
         self.op_data = self.discover(op_url)
         self.reg_info = self.register_client(op_data=self.op_data,client_url=client_url)
-        print(self.reg_info)
         self.__client_id = self.reg_info['web']['client_id']
         self.__client_secret = self.reg_info['web']['client_secret']
 
@@ -69,7 +68,6 @@ class ClientHandler:
         op_data = {}
         try:
             op_data = disc.discover_OP_information(op_url)
-            # print(op_data)
             return op_data
 
         except json.JSONDecodeError as err:

@@ -50,65 +50,15 @@ dictConfig({
 
 })
 '''
-# recebe a url do op
-# descobre os dados do op com a url
-# registra o cliente (app) no op com os dados do discovery
-# atualiza client-id, client-secret e metadata-server
-
-# def register_client(op_data: dict, client_url: str) -> dict:
-#     """[register client and returns client information]
-
-#     :param op_data: [description]
-#     :type op_data: dict
-#     :param client_url: [description]
-#     :type client_url: str
-#     :return: [client information including client-id and secret]
-#     :rtype: dict
-#     """
-#     redirect_uri = '%s/oidc_callback' % client_url
-#     reg_info = registration.register_client(op_data, [redirect_uri])
-#     return reg_info
-
-# def discover(op_url: str, disc:discovery=discovery) -> dict :
-#     """Discover op information on .well-known/open-id-configuration
-#     :param op_url: [url from OP]
-#     :type op_url: str
-#     :param discovery: [flask_oidc.discovery injection], defaults to discovery
-#     :type discovery: discovery, optional
-#     :return: [data retrieved from OP url]
-#     :rtype: dict
-#     """
-#     op_data = {}
-#     try:
-#         op_data = disc.discover_OP_information(op_url)
-#         print(op_data)
-#         return op_data
-
-#     except json.JSONDecodeError as err:
-#         print('Error trying to decode JSON: %s' % err)
-
-#     except RelativeURIError as err:
-#         print(err)
-
-#     except Exception as e:
-#         print('An unexpected ocurred: %s' % e)
-
-#     return op_data
-
 
 def get_preselected_provider():
     provider_id_string = cfg.PRE_SELECTED_PROVIDER_ID
-    print('get_preselected_provider - provider_id_string = %s' %
-          provider_id_string)
     provider_object = '{ "provider" : "%s" }' % provider_id_string
     provider_object_bytes = provider_object.encode()
     base64url_bytes = base64.urlsafe_b64encode(provider_object_bytes)
     base64url_value = base64url_bytes.decode()
-    print('get_preselected_provider - base64url encoded: %s' % base64url_value)
     if base64url_value.endswith('='):
         base64url_value_unpad = base64url_value.replace('=', '')
-        print('get_preselected_provider - base64url encoded unpad: %s' %
-              base64url_value_unpad)
         return base64url_value_unpad
     return base64url_value
 
@@ -138,7 +88,7 @@ def create_app():
                        'acr_value': cfg.ACR_VALUES
                    },
                    token_endpoint_auth_method='client_secret_post')
-    
+
     @app.route('/')
     def index():
         return '''
@@ -183,7 +133,6 @@ def create_app():
                 )
                 data = client_handler.get_client_dict()
                 status = 200
-        print(jsonify(data),status)
         return jsonify(data), status
 
 
@@ -257,6 +206,7 @@ def create_app():
                 cfg.PRE_SELECTED_PROVIDER = True
                 app.logger.debug('/configuration: provider_id = %s' %
                                  content['provider_id'])
+
                 return jsonify({"provider_id": content['provider_id']}), 200
         else:
             return {}, 400
