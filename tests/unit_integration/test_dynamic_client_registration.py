@@ -16,7 +16,7 @@ def get_class_instance(op_url='https://t1.techno24x7.com',
     return client_handler_obj
 
 
-class DynamicClientRegistration(TestCase):
+class TestDynamicClientRegistration(TestCase):
 
     def test_if_registration_is_imported_in_sys(self):
         self.assertIn('flask_oidc.registration', sys.modules,
@@ -178,6 +178,7 @@ class DynamicClientRegistration(TestCase):
         op_url = 'https://t1.techno24x7.com'
         client_url = 'https://mock.test.com'
         client_handler_obj = ClientHandler(op_url, client_url)
+        # import ipdb; ipdb.set_trace()
         self.assertEqual(
             client_handler_obj.__dict__['_ClientHandler__client_url'],
             client_url)
