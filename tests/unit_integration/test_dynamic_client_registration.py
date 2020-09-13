@@ -7,7 +7,6 @@ import clientapp.client_handler as client_handler
 from typing import Optional
 import helper
 
-
 ClientHandler = client_handler.ClientHandler
 
 #helper
@@ -17,7 +16,6 @@ def get_class_instance(op_url='https://t1.techno24x7.com', client_url='https://m
 
 
 class DynamicClientRegistration(TestCase):
-
 
     def test_if_registration_is_imported_in_sys(self):
         self.assertIn(
@@ -238,9 +236,6 @@ class DynamicClientRegistration(TestCase):
 
         expected_metadata_url = op_url + '/.well-known/openid-configuration'
 
-        #client_handler_obj = ClientHandler(op_url,client_url)
-
-
         self.assertEqual(
             client_handler_obj.__dict__['_ClientHandler__metadata_url'],
             expected_metadata_url
@@ -290,7 +285,6 @@ class DynamicClientRegistration(TestCase):
 
     def test_get_client_dict_should_return_client_id_value(self):
         client_handler_obj = get_class_instance()
-        # import ipdb; ipdb.set_trace()
         self.assertEqual(
             client_handler_obj.get_client_dict()['client_id'],
             client_handler_obj._ClientHandler__client_id
@@ -301,7 +295,6 @@ class DynamicClientRegistration(TestCase):
         ClientHandler.discover.return_value = helper.OP_DATA_DICT_RESPONSE
         client_handler_obj = get_class_instance()
         ClientHandler.discover.assert_called_once()
-
 
 
     def test_init_should_call_register_client_once(self):
