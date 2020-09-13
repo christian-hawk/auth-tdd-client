@@ -10,6 +10,7 @@ import sys
 from httplib2 import RelativeURIError
 from .client_handler import ClientHandler
 from urllib.parse import urlparse
+
 from .ressources.errors import MismatchingStateError, OAuthError
 import os
 
@@ -137,7 +138,7 @@ def create_app():
                        'acr_value': cfg.ACR_VALUES
                    },
                    token_endpoint_auth_method='client_secret_post')
-
+    
     @app.route('/')
     def index():
         return '''
@@ -185,6 +186,7 @@ def create_app():
         print(jsonify(data),status)
         return jsonify(data), status
 
+
     @app.route('/protected-content', methods=['GET'])
     def protected_content():
         app.logger.debug('/protected-content - cookies = %s' % request.cookies)
@@ -223,6 +225,7 @@ def create_app():
         try:
             if not request.args['code']:
                 return {}, 400
+
             app.logger.info('/callback - received %s - %s' %
                             (request.method, request.query_string))
             token = oauth.op.authorize_access_token()
@@ -257,4 +260,5 @@ def create_app():
                 return jsonify({"provider_id": content['provider_id']}), 200
         else:
             return {}, 400
+
     return app
