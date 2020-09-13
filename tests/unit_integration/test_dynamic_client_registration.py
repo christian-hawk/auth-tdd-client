@@ -16,7 +16,8 @@ def get_class_instance(op_url='https://t1.techno24x7.com',
     return client_handler_obj
 
 
-class DynamicClientRegistration(TestCase):
+class TestDynamicClientRegistration(TestCase):
+
     def test_if_registration_is_imported_in_sys(self):
         self.assertIn('flask_oidc.registration', sys.modules,
                       'flask_oidc.registration not found in sys')
@@ -177,6 +178,7 @@ class DynamicClientRegistration(TestCase):
         op_url = 'https://t1.techno24x7.com'
         client_url = 'https://mock.test.com'
         client_handler_obj = ClientHandler(op_url, client_url)
+        # import ipdb; ipdb.set_trace()
         self.assertEqual(
             client_handler_obj.__dict__['_ClientHandler__client_url'],
             client_url)
@@ -187,8 +189,6 @@ class DynamicClientRegistration(TestCase):
         client_handler_obj = get_class_instance(op_url)
 
         expected_metadata_url = op_url + '/.well-known/openid-configuration'
-
-        #client_handler_obj = ClientHandler(op_url,client_url)
 
         self.assertEqual(
             client_handler_obj.__dict__['_ClientHandler__metadata_url'],
@@ -233,9 +233,10 @@ class DynamicClientRegistration(TestCase):
 
     def test_get_client_dict_should_return_client_id_value(self):
         client_handler_obj = get_class_instance()
-        # import ipdb; ipdb.set_trace()
-        self.assertEqual(client_handler_obj.get_client_dict()['client_id'],
-                         client_handler_obj._ClientHandler__client_id)
+        self.assertEqual(
+            client_handler_obj.get_client_dict()['client_id'],
+            client_handler_obj._ClientHandler__client_id
+        )
 
     def test_init_should_call_discover_once(self):
         ClientHandler.discover = MagicMock(name='discover')

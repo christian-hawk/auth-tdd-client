@@ -9,6 +9,7 @@ import json
 import sys
 from httplib2 import RelativeURIError
 from .client_handler import ClientHandler
+from urllib.parse import urlparse
 
 from .ressources.errors import MismatchingStateError, OAuthError
 import os
@@ -49,65 +50,15 @@ dictConfig({
 
 })
 '''
-# recebe a url do op
-# descobre os dados do op com a url
-# registra o cliente (app) no op com os dados do discovery
-# atualiza client-id, client-secret e metadata-server
-
-# def register_client(op_data: dict, client_url: str) -> dict:
-#     """[register client and returns client information]
-
-#     :param op_data: [description]
-#     :type op_data: dict
-#     :param client_url: [description]
-#     :type client_url: str
-#     :return: [client information including client-id and secret]
-#     :rtype: dict
-#     """
-#     redirect_uri = '%s/oidc_callback' % client_url
-#     reg_info = registration.register_client(op_data, [redirect_uri])
-#     return reg_info
-
-# def discover(op_url: str, disc:discovery=discovery) -> dict :
-#     """Discover op information on .well-known/open-id-configuration
-#     :param op_url: [url from OP]
-#     :type op_url: str
-#     :param discovery: [flask_oidc.discovery injection], defaults to discovery
-#     :type discovery: discovery, optional
-#     :return: [data retrieved from OP url]
-#     :rtype: dict
-#     """
-#     op_data = {}
-#     try:
-#         op_data = disc.discover_OP_information(op_url)
-#         print(op_data)
-#         return op_data
-
-#     except json.JSONDecodeError as err:
-#         print('Error trying to decode JSON: %s' % err)
-
-#     except RelativeURIError as err:
-#         print(err)
-
-#     except Exception as e:
-#         print('An unexpected ocurred: %s' % e)
-
-#     return op_data
-
 
 def get_preselected_provider():
     provider_id_string = cfg.PRE_SELECTED_PROVIDER_ID
-    print('get_preselected_provider - provider_id_string = %s' %
-          provider_id_string)
     provider_object = '{ "provider" : "%s" }' % provider_id_string
     provider_object_bytes = provider_object.encode()
     base64url_bytes = base64.urlsafe_b64encode(provider_object_bytes)
     base64url_value = base64url_bytes.decode()
-    print('get_preselected_provider - base64url encoded: %s' % base64url_value)
     if base64url_value.endswith('='):
         base64url_value_unpad = base64url_value.replace('=', '')
-        print('get_preselected_provider - base64url encoded unpad: %s' %
-              base64url_value_unpad)
         return base64url_value_unpad
     return base64url_value
 
@@ -126,8 +77,6 @@ def create_app():
 
     app = Flask(__name__)
 
-    # app.config['OIDC_CLIENT_SECRETS'] = 'client_secrets.json'
-
     app.secret_key = b'fasfafpj3rasdaasfglaksdgags331s'
     app.config['OP_CLIENT_ID'] = cfg.CLIENT_ID
     app.config['OP_CLIENT_SECRET'] = cfg.CLIENT_SECRET
@@ -139,9 +88,6 @@ def create_app():
                        'acr_value': cfg.ACR_VALUES
                    },
                    token_endpoint_auth_method='client_secret_post')
-
-    # token_endpoint_auth_method = 'client_secret_post')
-    # client_auth_methods = ['client_secret_post'])
 
     @app.route('/')
     def index():
@@ -159,10 +105,36 @@ def create_app():
 
     @app.route('/register', methods=['POST'])
     def register():
-        client_handler = ClientHandler('https://t1.techno24x7.com',
-                                       'https://test.com')
-        content = request.json
-        return {}, 100
+        status = 0
+        data = ''
+        if request.json is None:
+            status = 400
+            # message = 'No json data posted'
+        elif 'op_url' and 'client_url' not in request.json:
+            status = 400
+            # message = 'Not needed keys found in json'
+        else:
+            op_url = request.json['op_url']
+            client_url = request.json['client_url']
+
+            op_parsed_url = urlparse(op_url)
+            client_parsed_url = urlparse(client_url)
+
+            if op_parsed_url.scheme != 'https' or client_parsed_url.scheme != 'https':
+                status = 400
+
+            elif (((op_parsed_url.path != '' or op_parsed_url.query != '') or client_parsed_url.path != '') or client_parsed_url.query != ''):
+                status = 400
+
+            else:
+                client_handler = ClientHandler(
+                    request.json['op_url'],
+                    request.json['client_url']
+                )
+                data = client_handler.get_client_dict()
+                status = 200
+        return jsonify(data), status
+
 
     @app.route('/protected-content', methods=['GET'])
     def protected_content():
@@ -201,7 +173,8 @@ def create_app():
     def callback():
         try:
             if not request.args['code']:
-                return 400
+                return {}, 400
+
             app.logger.info('/callback - received %s - %s' %
                             (request.method, request.query_string))
             token = oauth.op.authorize_access_token()
@@ -233,8 +206,8 @@ def create_app():
                 cfg.PRE_SELECTED_PROVIDER = True
                 app.logger.debug('/configuration: provider_id = %s' %
                                  content['provider_id'])
-                return jsonify({"provider_id": content['provider_id']}), 200
 
+                return jsonify({"provider_id": content['provider_id']}), 200
         else:
             return {}, 400
 
