@@ -51,6 +51,7 @@ dictConfig({
 })
 '''
 
+
 def get_preselected_provider():
     provider_id_string = cfg.PRE_SELECTED_PROVIDER_ID
     provider_object = '{ "provider" : "%s" }' % provider_id_string
@@ -135,7 +136,6 @@ def create_app():
                 status = 200
         return jsonify(data), status
 
-
     @app.route('/protected-content', methods=['GET'])
     def protected_content():
         app.logger.debug('/protected-content - cookies = %s' % request.cookies)
@@ -208,6 +208,12 @@ def create_app():
                                  content['provider_id'])
 
                 return jsonify({"provider_id": content['provider_id']}), 200
+
+            elif "client_id" in content and "client_secret" in content:
+                ''' Setup client_id and client_secret '''
+                oauth.op.client_id = content['client_id']
+                oauth.op.client_secret = content['client_secret']
+                return {}, 200
         else:
             return {}, 400
 
