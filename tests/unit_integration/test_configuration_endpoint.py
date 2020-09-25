@@ -104,7 +104,7 @@ class TestConfigurationEndpoint(FlaskBaseTestCase):
             "client_secret": client_secret,
             "op_metadata_url": op_metadata_url
         })
-        response = self.client.post(
+        self.client.post(
             url_for('configuration'), data=json_data, headers=headers)
         self.assertTrue(clientapp.oauth.op.client_id == client_id,
                         'endpoint is NOT changing op.client_id')
@@ -113,7 +113,7 @@ class TestConfigurationEndpoint(FlaskBaseTestCase):
         headers = {'Content-type': 'application/json'}
         json_data = json.dumps(valid_client_configuration())
         client_secret = valid_client_configuration()['client_secret']
-        response = self.client.post(
+        self.client.post(
             url_for('configuration'), data=json_data, headers=headers)
         self.assertTrue(clientapp.oauth.op.client_secret == client_secret,
                         '%s is is not %s' % (clientapp.oauth.op.client_secret, client_secret))
