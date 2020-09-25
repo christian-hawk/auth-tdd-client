@@ -201,7 +201,7 @@ def create_app():
 
     @app.route("/configuration", methods=["POST"])
     def configuration():
-        '''Receives client configuration via API'''
+        # Receives client configuration via API
         app.logger.info('/configuration called')
         content = request.json
         app.logger.debug("content = %s" % content)
@@ -215,7 +215,7 @@ def create_app():
                 return jsonify({"provider_id": content['provider_id']}), 200
 
             elif "client_id" in content and "client_secret" in content:
-                ''' Setup client_id and client_secret '''
+                # Setup client_id and client_secret
                 oauth.op.client_id = content['client_id']
                 oauth.op.client_secret = content['client_secret']
                 return {}, 200
