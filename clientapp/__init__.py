@@ -214,7 +214,7 @@ def create_app():
 
                 return jsonify({"provider_id": content['provider_id']}), 200
 
-            elif "client_id" in content and "client_secret" in content:
+            if "client_id" in content and "client_secret" in content:
                 # Setup client_id and client_secret
                 oauth.op.client_id = content['client_id']
                 oauth.op.client_secret = content['client_secret']
