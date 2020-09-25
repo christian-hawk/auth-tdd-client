@@ -106,17 +106,22 @@ def create_app():
 
     @app.route('/register', methods=['POST'])
     def register():
+        app.logger.info('/register called')
+        content = request.json
+        app.logger.debug('data = %s' % content)
+        app.logger.info('Trying to register client %s on %s' %
+                        (content['client_url'], content['op_url']))
         status = 0
         data = ''
-        if request.json is None:
+        if content is None:
             status = 400
             # message = 'No json data posted'
-        elif 'op_url' and 'client_url' not in request.json:
+        elif 'op_url' and 'client_url' not in content:
             status = 400
             # message = 'Not needed keys found in json'
         else:
-            op_url = request.json['op_url']
-            client_url = request.json['client_url']
+            op_url = content['op_url']
+            client_url = content['client_url']
 
             op_parsed_url = urlparse(op_url)
             client_parsed_url = urlparse(client_url)
@@ -129,8 +134,8 @@ def create_app():
 
             else:
                 client_handler = ClientHandler(
-                    request.json['op_url'],
-                    request.json['client_url']
+                    content['op_url'],
+                    content['client_url']
                 )
                 data = client_handler.get_client_dict()
                 status = 200
