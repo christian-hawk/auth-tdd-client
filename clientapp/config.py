@@ -1,5 +1,5 @@
-CLIENT_ID = "6fffd04d-8cbb-4989-8e17-ece3d92ff7c5"
-CLIENT_SECRET = "92f7c172-6d51-4159-98a5-58d9ead7c9e1"
+CLIENT_ID = "a7e1125da-b164-4aa9-85e9-456f510c7eda"
+CLIENT_SECRET = "a911acfa2-c4e2-4258-987c-af47864be058"
 CLIENT_AUTH_URI = "https://t1.techno24x7.com/oxauth/restv1/authorize"
 TOKEN_URI = "https://t1.techno24x7.com/oxauth/restv1/token"
 USERINFO_URI = "https://t1.techno24x7.com/oxauth/restv1/userinfo"
@@ -20,7 +20,7 @@ SERVER_TOKEN_AUTH_METHOD = "client_secret_post"
 # for gluu
 ACR_VALUES = 'passport_saml'
 PRE_SELECTED_PROVIDER = True
-PRE_SELECTED_PROVIDER_ID = 'saml-default'
+PRE_SELECTED_PROVIDER_ID = ''
 
 # SYSTEM SETTINGS
 # use with caution, unsecure requests, for develpment environments

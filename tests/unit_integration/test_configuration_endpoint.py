@@ -16,6 +16,14 @@ def app_endpoints(app: Flask) -> List[str]:
     return endpoints
 
 
+def valid_client_configuration():
+    return {
+        "client_id": "my-client-id",
+        "client_secret": "my-client-secret",
+        "op_metadata_url": "https://op.com/.well-known/openidconfiguration"
+    }
+
+
 class FlaskBaseTestCase(TestCase):
     def setUp(self):
         self.app = clientapp.create_app()
@@ -61,9 +69,9 @@ class TestConfigurationEndpoint(FlaskBaseTestCase):
         headers = {'Content-type': 'application/json'}
         data = {'provider_id': 'whatever'}
         json_data = json.dumps(data)
-        response = self.client.post(url_for('configuration'),
-                                    data=json_data,
-                                    headers=headers)
+        self.client.post(url_for('configuration'),
+                         data=json_data,
+                         headers=headers)
 
         self.assertEqual(clientapp.cfg.PRE_SELECTED_PROVIDER_ID, 'whatever')
 
@@ -72,8 +80,40 @@ class TestConfigurationEndpoint(FlaskBaseTestCase):
         headers = {'Content-type': 'application/json'}
         data = {'provider_id': 'whatever'}
         json_data = json.dumps(data)
-        response = self.client.post(url_for('configuration'),
-                                    data=json_data,
-                                    headers=headers)
+        self.client.post(url_for('configuration'),
+                         data=json_data,
+                         headers=headers)
 
         self.assertTrue(clientapp.cfg.PRE_SELECTED_PROVIDER, )
+
+    def test_endpoint_should_return_200_if_valid_client_config(self):
+        headers = {'Content-type': 'application/json'}
+        json_data = json.dumps(valid_client_configuration())
+        response = self.client.post(
+            url_for('configuration'), data=json_data, headers=headers)
+        self.assertEqual(response.status_code, 200,
+                         'endpoint is NOT returning 200 for valid client configuration')
+
+    def test_endpoint_should_register_new_oauth_client_id(self):
+        headers = {'Content-type': 'application/json'}
+        client_id = "my-client-id"
+        client_secret = "my-client-secret"
+        op_metadata_url = "https://op.com/.well-known/openidconfiguration"
+        json_data = json.dumps({
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "op_metadata_url": op_metadata_url
+        })
+        self.client.post(
+            url_for('configuration'), data=json_data, headers=headers)
+        self.assertTrue(clientapp.oauth.op.client_id == client_id,
+                        'endpoint is NOT changing op.client_id')
+
+    def test_endpoint_should_register_new_oauth_client_secret(self):
+        headers = {'Content-type': 'application/json'}
+        json_data = json.dumps(valid_client_configuration())
+        client_secret = valid_client_configuration()['client_secret']
+        self.client.post(
+            url_for('configuration'), data=json_data, headers=headers)
+        self.assertTrue(clientapp.oauth.op.client_secret == client_secret,
+                        '%s is is not %s' % (clientapp.oauth.op.client_secret, client_secret))

@@ -9,7 +9,7 @@ import helper
 ClientHandler = client_handler.ClientHandler
 
 
-#helper
+# helper
 def get_class_instance(op_url='https://t1.techno24x7.com',
                        client_url='https://mock.test.com'):
     client_handler_obj = ClientHandler(op_url, client_url)
@@ -83,8 +83,8 @@ class TestDynamicClientRegistration(TestCase):
             '_ClientHandler__client_secret',
             '_ClientHandler__client_url',
             '_ClientHandler__metadata_url',
-            'discover',  #method
-            'register_client'  #method
+            'discover',  # method
+            'register_client'  # method
         ]
 
         self.assertTrue(
