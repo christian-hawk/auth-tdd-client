@@ -69,9 +69,9 @@ class TestConfigurationEndpoint(FlaskBaseTestCase):
         headers = {'Content-type': 'application/json'}
         data = {'provider_id': 'whatever'}
         json_data = json.dumps(data)
-        response = self.client.post(url_for('configuration'),
-                                    data=json_data,
-                                    headers=headers)
+        self.client.post(url_for('configuration'),
+                         data=json_data,
+                         headers=headers)
 
         self.assertEqual(clientapp.cfg.PRE_SELECTED_PROVIDER_ID, 'whatever')
 
@@ -80,9 +80,9 @@ class TestConfigurationEndpoint(FlaskBaseTestCase):
         headers = {'Content-type': 'application/json'}
         data = {'provider_id': 'whatever'}
         json_data = json.dumps(data)
-        response = self.client.post(url_for('configuration'),
-                                    data=json_data,
-                                    headers=headers)
+        self.client.post(url_for('configuration'),
+                         data=json_data,
+                         headers=headers)
 
         self.assertTrue(clientapp.cfg.PRE_SELECTED_PROVIDER, )
 
