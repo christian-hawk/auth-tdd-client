@@ -109,8 +109,6 @@ def create_app():
         app.logger.info('/register called')
         content = request.json
         app.logger.debug('data = %s' % content)
-        app.logger.info('Trying to register client %s on %s' %
-                        (content['client_url'], content['op_url']))
         status = 0
         data = ''
         if content is None:
@@ -120,6 +118,8 @@ def create_app():
             status = 400
             # message = 'Not needed keys found in json'
         else:
+            app.logger.info('Trying to register client %s on %s' %
+                            (content['client_url'], content['op_url']))
             op_url = content['op_url']
             client_url = content['client_url']
 
