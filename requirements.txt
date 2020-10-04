@@ -2,6 +2,7 @@ appnope==0.1.0
 astroid==2.3.3
 attrs==19.3.0
 Authlib==0.14.3
+autopep8==1.5.4
 backcall==0.2.0
 bandit==1.6.2
 behave==1.2.6
@@ -42,9 +43,11 @@ parse==1.15.0
 parse-type==0.5.2
 parso==0.7.0
 pbr==5.4.5
+pep8==1.7.1
 pep8-naming==0.4.1
 pexpect==4.8.0
 pickleshare==0.7.5
+pkg-resources==0.0.0
 pluggy==0.13.1
 prompt-toolkit==3.0.5
 prospector==1.2.0
@@ -52,7 +55,7 @@ ptyprocess==0.6.0
 py==1.8.1
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
-pycodestyle==2.4.0
+pycodestyle==2.6.0
 pycparser==2.20
 pydocstyle==5.0.2
 pyflakes==2.1.1
