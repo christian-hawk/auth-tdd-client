@@ -11,7 +11,7 @@ cffi==1.14.0
 chardet==3.0.4
 click==7.1.2
 coverage==5.1
-cryptography==3.2
+cryptography==3.3.2
 decorator==4.4.2
 dodgy==0.2.1
 EasyProcess==0.3
