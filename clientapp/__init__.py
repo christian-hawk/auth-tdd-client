@@ -66,6 +66,7 @@ def get_preselected_provider():
 
 def ssl_verify(ssl_verify=cfg.SSL_VERIFY):
     if ssl_verify is False:
+        print("Here!")
         os.environ['CURL_CA_BUNDLE'] = ""
 
 
@@ -88,7 +89,7 @@ def create_app():
                        'scope': 'openid profile mail user_name',
                        'acr_value': cfg.ACR_VALUES
                    },
-                   token_endpoint_auth_method='client_secret_post')
+                   token_endpoint_auth_method=cfg.SERVER_TOKEN_AUTH_METHOD)
 
     @app.route('/')
     def index():
@@ -98,7 +99,7 @@ def create_app():
             <body>
                 <h1>Welcome to the test of your life</h1>
                 <br><hr>
-                <h3><a href="https://chris.testingenv.org/protected-content">
+                <h3><a href="https://localhost:9090/protected-content">
                 Click here to start!</a>
             </body>
         </html>
@@ -184,7 +185,7 @@ def create_app():
                             (request.method, request.query_string))
             token = oauth.op.authorize_access_token()
             app.logger.debug('/callback - token = %s' % token)
-            user = oauth.op.parse_id_token(token)
+            user = token['userinfo']
             app.logger.debug('/callback - user = %s' % user)
             session['user'] = user
             app.logger.debug('/callback - cookies = %s' % request.cookies)
