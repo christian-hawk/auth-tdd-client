@@ -58,9 +58,20 @@ def get_preselected_provider():
     provider_object_bytes = provider_object.encode()
     base64url_bytes = base64.urlsafe_b64encode(provider_object_bytes)
     base64url_value = base64url_bytes.decode()
-    if base64url_value.endswith('='):
-        base64url_value_unpad = base64url_value.replace('=', '')
-        return base64url_value_unpad
+    # if base64url_value.endswith('='):
+    #     base64url_value_unpad = base64url_value.replace('=', '')
+    #     return base64url_value_unpad
+    return base64url_value
+
+def get_provider_host():
+    provider_host_string  = cfg.PROVIDER_HOST_STRING
+    provider_object = '{ "providerHost" : "%s" }' % provider_host_string
+    provider_object_bytes = provider_object.encode()
+    base64url_bytes = base64.urlsafe_b64encode(provider_object_bytes)
+    base64url_value = base64url_bytes.decode()
+    # if base64url_value.endswith('='):
+    #     base64url_value_unpad = base64url_value.replace('=', '')
+    #     return base64url_value_unpad
     return base64url_value
 
 
@@ -161,7 +172,7 @@ def create_app():
         if cfg.ACR_VALUES is not None:
             query_args['acr_values'] = cfg.ACR_VALUES
         
-        query_args["providerHost"] = "idp.mycustomer.org"
+        query_args["providerHost"] = get_provider_host()
 
         response = oauth.op.authorize_redirect(**query_args)
 
