@@ -18,9 +18,10 @@ SERVER_META_URL = "https://your-openid-configuration-uri"
 SERVER_TOKEN_AUTH_METHOD = "client_secret_post"
 
 # for gluu
-ACR_VALUES = 'passport_saml'
+ACR_VALUES = 'inbound_saml'
 PRE_SELECTED_PROVIDER = True
 PRE_SELECTED_PROVIDER_ID = ''
+PROVIDER_HOST_STRING = 'samltest.id'
 
 # SYSTEM SETTINGS
 # use with caution, unsecure requests, for develpment environments
