@@ -1,3 +1,7 @@
+#auth-client-tdd-specific
+clientapp/config.py
+clientapp/client_secrets.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -139,3 +143,4 @@ cython_debug/
 
 .vscode/
 .scannerwork
+

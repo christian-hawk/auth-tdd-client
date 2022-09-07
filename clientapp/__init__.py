@@ -1,4 +1,4 @@
-from flask import Flask, session, redirect, request, url_for, jsonify
+from flask import Flask, session, redirect, request, url_for, jsonify, render_template
 from authlib.integrations.flask_client import OAuth
 from . import config as cfg
 from logging.config import dictConfig
@@ -58,14 +58,26 @@ def get_preselected_provider():
     provider_object_bytes = provider_object.encode()
     base64url_bytes = base64.urlsafe_b64encode(provider_object_bytes)
     base64url_value = base64url_bytes.decode()
-    if base64url_value.endswith('='):
-        base64url_value_unpad = base64url_value.replace('=', '')
-        return base64url_value_unpad
+    # if base64url_value.endswith('='):
+    #     base64url_value_unpad = base64url_value.replace('=', '')
+    #     return base64url_value_unpad
+    return base64url_value
+
+def get_provider_host():
+    provider_host_string  = cfg.PROVIDER_HOST_STRING
+    provider_object = '{ "providerHost" : "%s" }' % provider_host_string
+    provider_object_bytes = provider_object.encode()
+    base64url_bytes = base64.urlsafe_b64encode(provider_object_bytes)
+    base64url_value = base64url_bytes.decode()
+    # if base64url_value.endswith('='):
+    #     base64url_value_unpad = base64url_value.replace('=', '')
+    #     return base64url_value_unpad
     return base64url_value
 
 
 def ssl_verify(ssl_verify=cfg.SSL_VERIFY):
     if ssl_verify is False:
+        print("Here!")
         os.environ['CURL_CA_BUNDLE'] = ""
 
 
@@ -82,27 +94,21 @@ def create_app():
     app.config['OP_CLIENT_ID'] = cfg.CLIENT_ID
     app.config['OP_CLIENT_SECRET'] = cfg.CLIENT_SECRET
     oauth.init_app(app)
-    oauth.register('op',
+    oauth.register(
+                    'op',
                    server_metadata_url=cfg.SERVER_META_URL,
                    client_kwargs={
-                       'scope': 'openid profile mail user_name',
+                       'scope': 'openid profile email profile',
                        'acr_value': cfg.ACR_VALUES
                    },
-                   token_endpoint_auth_method='client_secret_post')
+                   token_endpoint_auth_method=cfg.SERVER_TOKEN_AUTH_METHOD)
 
     @app.route('/')
     def index():
-        return '''
-        <html>
-            <head><title>Index Test</title></head>
-            <body>
-                <h1>Welcome to the test of your life</h1>
-                <br><hr>
-                <h3><a href="https://chris.testingenv.org/protected-content">
-                Click here to start!</a>
-            </body>
-        </html>
-        '''
+        user = session.get('user')
+        id_token = session.get('id_token')
+        return render_template("home.html", user=user, id_token=id_token)
+        
 
     @app.route('/register', methods=['POST'])
     def register():
@@ -146,7 +152,7 @@ def create_app():
         app.logger.debug('/protected-content - cookies = %s' % request.cookies)
         app.logger.debug('/protected-content - session = %s' % session)
         if 'user' in session:
-            return {'status': 'success'}, 200
+            return session['user']
 
         return redirect(url_for('login'))
 
@@ -155,7 +161,7 @@ def create_app():
         app.logger.info('/login requested')
         redirect_uri = cfg.REDIRECT_URIS[0]
         app.logger.debug('/login redirect_uri = %s' % redirect_uri)
-        response = oauth.op.authorize_redirect()
+        # response = oauth.op.authorize_redirect()
         query_args = {
             'redirect_uri': redirect_uri,
         }
@@ -165,6 +171,8 @@ def create_app():
 
         if cfg.ACR_VALUES is not None:
             query_args['acr_values'] = cfg.ACR_VALUES
+        
+        query_args["providerHost"] = get_provider_host()
 
         response = oauth.op.authorize_redirect(**query_args)
 
@@ -184,12 +192,12 @@ def create_app():
                             (request.method, request.query_string))
             token = oauth.op.authorize_access_token()
             app.logger.debug('/callback - token = %s' % token)
-            user = oauth.op.parse_id_token(token)
+            user = oauth.op.userinfo()
             app.logger.debug('/callback - user = %s' % user)
             session['user'] = user
             app.logger.debug('/callback - cookies = %s' % request.cookies)
             app.logger.debug('/callback - session = %s' % session)
-            # TODO: get user info
+            session['id_token'] = token['userinfo']
 
             return redirect('/')
 
