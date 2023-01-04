@@ -68,13 +68,34 @@ python3 main.py
 
 * navigate to `https://localhost:9090/protected-content`
 
-## Developing
+## Extra Features
 
-### Test First
+### Auto-register endpoint
 
-- BDD black box: independent testing using behave and selenium
-- TDD: Test first, always: unit tests using unittest lib and pytest
-- Coverage: minimum accepted: 80%
+Sending a `POST` request to `/register` endpoint containing a `JSON` with the OP/AS url and client url, like this:
+
+```json
+{
+    "op_url": "https://idpproxy-test.usg.edu",
+    "client_url": "https://tempclient.techno24x7.com"
+}
+```
+
+Will return client id and client secret
+
+### Auto-config endpoint
+
+Sending a `POST` request to `/configuration` endpoint, containing client id, client secret, and metadata endpoint will fetch data from metadata url and override `config.py` settings during runtime. 
+
+```json
+{
+    "client_id": "e4f2c3a9-0797-4c6c-9268-35c5546fb3e9",
+    "client_secret": "5c9e4775-0f1d-4a56-87c9-a629e1f88b9b",
+    "op_metadata_url": "https://t1.techno24x7.com/.well-known/openid-configuration"
+}
+```
+
+
 
 
 
