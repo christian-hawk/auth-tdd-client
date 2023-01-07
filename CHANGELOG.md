@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/christian-hawk/auth-tdd-client/compare/v0.4.1...v0.4.2) (2023-01-07)
+
+
+### Bug Fixes
+
+* **scope:** remove duplicated `profile` scope ([#51](https://github.com/christian-hawk/auth-tdd-client/issues/51)) ([d3f65e1](https://github.com/christian-hawk/auth-tdd-client/commit/d3f65e1e2f736ae2f8b19571944c4ff6550c8912))
+
 ## [0.4.1](https://github.com/christian-hawk/auth-tdd-client/compare/v0.4.0...v0.4.1) (2023-01-07)
 
 
