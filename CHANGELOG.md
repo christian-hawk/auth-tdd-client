@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/christian-hawk/auth-tdd-client/compare/v0.4.0...v0.4.1) (2023-01-07)
+
+
+### Bug Fixes
+
+* add `providerHost` only if exists ([5e3fc00](https://github.com/christian-hawk/auth-tdd-client/commit/5e3fc00c7d4b732200827f5f2d60ee92f2f16cad)), closes [#43](https://github.com/christian-hawk/auth-tdd-client/issues/43)
+
 ## [0.4.0](https://github.com/christian-hawk/auth-tdd-client/compare/v0.3.5...v0.4.0) (2023-01-07)
 
 
