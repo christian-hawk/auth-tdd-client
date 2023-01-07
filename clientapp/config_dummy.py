@@ -19,9 +19,11 @@ SERVER_TOKEN_AUTH_METHOD = "client_secret_post"
 
 # for gluu
 ACR_VALUES = 'inbound_saml'
-PRE_SELECTED_PROVIDER = True
+PRE_SELECTED_PROVIDER = False
 PRE_SELECTED_PROVIDER_ID = ''
-PROVIDER_HOST_STRING = 'samltest.id'
+HAS_PROVIDER_HOST = False
+PROVIDER_HOST_STRING = None
+# PROVIDER_HOST_STRING = 'samltest.id'
 
 # SYSTEM SETTINGS
 # use with caution, unsecure requests, for develpment environments
