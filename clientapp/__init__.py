@@ -100,7 +100,7 @@ def create_app():
                     'op',
                    server_metadata_url=cfg.SERVER_META_URL,
                    client_kwargs={
-                       'scope': 'openid profile email profile',
+                       'scope': 'openid profile email',
                        'acr_value': cfg.ACR_VALUES
                    },
                    token_endpoint_auth_method=cfg.SERVER_TOKEN_AUTH_METHOD)
