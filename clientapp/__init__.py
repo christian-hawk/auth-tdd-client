@@ -16,18 +16,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 import base64
-import json
 import logging
 import os
-import sys
-from logging.config import dictConfig
 from urllib.parse import urlparse
 
 from authlib.integrations.flask_client import OAuth
 from flask import (Flask, jsonify, redirect, render_template, request, session,
                    url_for)
-from flask_oidc import discovery, registration
-from httplib2 import RelativeURIError
 
 from . import config as cfg
 from .client_handler import ClientHandler
