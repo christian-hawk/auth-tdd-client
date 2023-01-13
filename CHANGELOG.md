@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.3](https://github.com/christian-hawk/auth-tdd-client/compare/v0.4.2...v0.4.3) (2023-01-13)
+
+
+### Documentation
+
+* change LICENSE to Apache 2.0 ([#54](https://github.com/christian-hawk/auth-tdd-client/issues/54)) ([0805d5e](https://github.com/christian-hawk/auth-tdd-client/commit/0805d5e3ef509572f67175dcb8509a72c6c1184e))
+
 ## [0.4.2](https://github.com/christian-hawk/auth-tdd-client/compare/v0.4.1...v0.4.2) (2023-01-07)
 
 
